@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/jquery.tablesorter.min.js') }}"></script>
+<script type="text/javascript" id="js">
+$(document).ready(function() {
+  var timeExtraction = function(node) {
+    if ($(node).attr('data-time-in-seconds') !== undefined) {
+      return '-' + node.getAttribute('data-time-in-seconds');
+    } else {
+      return node.innerHTML;
+    }
+  }
+  $("#seed-overview-table").tablesorter({
+    textExtraction: timeExtraction
+  });
+});
+</script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+{% endblock %}
+
+
+
+{% block body %}
+<section class="header">
+  <h4 class="title">种子概览</h4>
+  <div class="row">
+    <div class="u-full-width">
+      <h6 class="docs-header seed-overview">有关种子网络的更多有价值的详情，逐步添加中</h6>
+      <table id="seed-overview-table" class="tablesorter">
+        <thead>
+          <tr>
+            <th>group_id</th>
+            <th>分享者</th>
+            <th>种子</th>
+            <th class="datetime">收录于</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for seed in seeds %}
+            <tr>
+              <td><a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_id }}</a></td>
+              <td>{{ seed.creator }}</td>
+              <td>
+                <textarea >{{ seed.seed }}</textarea>
+              </td>
+              <td data-time-in-seconds="{{ seed.created_at|in_seconds }}">{{ seed.created_at|humanize }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

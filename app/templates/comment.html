@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/seed.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<section class="header">
+  <h2 class="title">{{seed.group_id}}</h2>
+  <div class="row">
+    <div class="three columns value-prop"></div>
+    <div class="six columns">
+      {% if form.errors %}
+        <div class="has-error"><strong>出错了</strong></div>
+      {% endif %}
+      <form method=post>
+        {{ form.hidden_tag() }}
+        <dl>
+          <dd>{{ form.text(class_="u-full-width", placeholder="这个种子网络怎么样？", value="", maxlength=128) }}
+          <dd>{{ form.stars(class_="u-full-width", placeholder="打分 0-5", value="", maxlength=8) }}
+          <dt>{{ form.submit }}
+        </dl>
+      </form>
+    </div>
+    <div class="row">
+      <div class="one-half column open-comments">
+        <h4 class="docs-header">评论</h4>
+        <ul>
+        <table>
+          <tr>
+            <th>序号</th>
+            <th>评分</th>
+            <th>评论</th>
+          </tr>
+          {% for comment in seed.comments %}
+          <tr>
+              <th>{{ comment.id }} </th>
+              <th>{{ comment.stars }} </th>
+              <th>{{ comment.commenttext }}</th>
+          </tr>
+          {% endfor %}
+        </table>
+        </ul>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

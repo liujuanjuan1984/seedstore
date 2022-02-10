@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block body %}
+<section class="header">
+  <h2 class="title">分享种子</h2>
+  <div class="row">
+    <div class="three columns value-prop"></div>
+    <div class="six columns">
+      {% if form.errors %}
+        <div class="has-error"><strong>请从 rum 中拷贝种子文本粘贴在下方</strong></div>
+      {% endif %}
+      <form action="{{ url_for('main.add_seed') }}" method=post>
+        {{ form.hidden_tag() }}
+        <dl>
+          <dd>{{ form.seed(class_="u-full-width", placeholder="在此处粘贴种子", maxlength=2000) }}
+          <dt>{{ form.submit(class="button button-primary", value="提交") }}
+        </dl>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}
