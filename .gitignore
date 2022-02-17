@@ -24,5 +24,7 @@ env/
 
 # notes
 
+data/*
 temp*.md
 temp*.py
+*.7z

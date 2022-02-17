@@ -33,7 +33,7 @@ class FakeGenerator:
                         "ProducerPubKey": "CAISIQKQTRT79u3hUFSy4Xb0yFt2ZRmv03ln8bm0IwkuNotNdw==",
                         "Hash": "M/dxRWOJY4CERDT9+1LnHZRGVfEeFz4ODppYZ5ytsjM=",
                         "Signature": "MEUCIHkzvphNEEAuZ1+Zlk89IgvzDOE62ylnhQK0IYIpMFJSAiEA1lOH5ItoyxGl5xzJejigMBzvICz+0PHCFWVzYZiJ/k4=",
-                        "TimeStamp": "1643186113157303700"
+                        "TimeStamp": "1643186113157303700",
                     },
                     "group_id": "e7ca1441-449a-497a-a458-dcc6631c1bd9",
                     "group_name": "2022断舍离",
@@ -42,8 +42,8 @@ class FakeGenerator:
                     "encryption_type": "public",
                     "cipher_key": "17cdeb65d678d5406f13665ab91cb5f545846f0a4413fc6da70c89b928579103",
                     "app_key": "group_timeline",
-                    "signature": "30450220207b2305ade56bee9e94b9c5530d27f4df5958a0aa7a0dcdb1f3c29e043cd795022100a5e368044746e726d77715a1b944ff35411a53016d508c5576d3dbb57486b257"
-                    },
+                    "signature": "30450220207b2305ade56bee9e94b9c5530d27f4df5958a0aa7a0dcdb1f3c29e043cd795022100a5e368044746e726d77715a1b944ff35411a53016d508c5576d3dbb57486b257",
+                },
                 creator="faker",
                 created_at=self.generate_fake_date(),
             ).save()
@@ -54,12 +54,11 @@ class FakeGenerator:
             seed = random.choice(seeds)
             comment = CommentsTable(
                 commenttext=forgery_py.forgery.lorem_ipsum.words(),
-                stars=random.choice(list(range(1,6))),
+                stars=random.choice(list(range(1, 6))),
                 group_id=seed.group_id,
                 creator=seed.creator,
                 created_at=self.generate_fake_date(),
             ).save()
-
 
     def generate_fake_data(self, count):
         # generation must follow this order, as each builds on the previous
