@@ -33,21 +33,29 @@ $(document).ready(function() {
       <table id="seed-overview-table" class="tablesorter">
         <thead>
           <tr>
+            <th>group_name</th>
             <th>group_id</th>
-            <th>分享者</th>
-            <th>种子</th>
+            <th>app_key</th>
+            <th>consensus_type</th>
+            <th>encryption_type</th>
+            <th>create_at</th>
+            <th>seed</th>
             <th class="datetime">收录于</th>
           </tr>
         </thead>
         <tbody>
           {% for seed in seeds %}
             <tr>
-              <td><a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_id }}</a></td>
-              <td>{{ seed.creator }}</td>
+              <td><a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></td>
+              <td>{{ seed.group_id }}</td>
+              <td>{{ seed.app_key }}</td>
+              <td>{{ seed.consensus_type }}</td>
+              <td>{{ seed.encryption_type }}</td>
+              <td>{{ seed.create_at }}</td>
               <td>
                 <textarea >{{ seed.seed }}</textarea>
               </td>
-              <td data-time-in-seconds="{{ seed.created_at|in_seconds }}">{{ seed.created_at|humanize }}</td>
+              <td data-time-in-seconds="{{ seed.add_at|in_seconds }}">{{ seed.add_at|humanize }}</td>
             </tr>
           {% endfor %}
         </tbody>

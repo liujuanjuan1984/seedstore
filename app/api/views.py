@@ -55,9 +55,7 @@ def get_user_seed(pubkey, group_id):
 def add_user_seed(pubkey):
     user = UsersTable.query.filter_by(pubkey=pubkey).first_or_404()
     try:
-        seed = SeedsTable(
-            seed=request.json.get("seed"), creator=user.pubkey
-        ).save()
+        seed = SeedsTable(seed=request.json.get("seed"), creator=user.pubkey).save()
     except:
         abort(400)
     return seed.to_dict(), 201
@@ -111,7 +109,7 @@ def add_seed_comment(group_id):
     seed = SeedsTable.query.get_or_404(group_id)
     try:
         comment = CommentsTable(
-            commenttext=request.json.get("commenttext"), 
+            commenttext=request.json.get("commenttext"),
             stars=request.json.get("stars"),
             group_id=seed.group_id,
             creator="addseedbot",
@@ -125,6 +123,3 @@ def add_seed_comment(group_id):
 def get_comment(comment_id):
     comment = CommentsTable.query.get_or_404(comment_id)
     return comment.to_dict()
-
-
-

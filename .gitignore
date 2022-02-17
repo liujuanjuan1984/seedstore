@@ -24,4 +24,5 @@ env/
 
 # notes
 
-temp.md
+temp*.md
+temp*.py

@@ -9,6 +9,15 @@
   <h2 class="title">{{seed.group_id}}</h2>
   <div class="row">
     <div class="three columns value-prop"></div>
+    <div>group_name <a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></div>
+    <div class="six columns"></div>
+    <div>group_id {{ seed.group_id }}</div>
+    <div>app_key {{ seed.app_key }}</div>
+    <div>consensus_type {{ seed.consensus_type }}</div>
+    <div>encryption_type {{ seed.encryption_type }}</div>
+    <div>create_at {{ seed.create_at }}</div>
+    <div> seed <textarea >{{ seed.seed }}</textarea> </div>
+    <div data-time-in-seconds="{{ seed.add_at|in_seconds }}">收录于 {{ seed.add_at|humanize }}</div>
     <div class="six columns">
       {% if form.errors %}
         <div class="has-error"><strong>出错了</strong></div>

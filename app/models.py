@@ -1,6 +1,7 @@
 import re
-import dataclasses 
-import json 
+import dataclasses
+import json
+import time
 from datetime import datetime
 
 from flask import url_for
@@ -23,6 +24,7 @@ class Block:
     Signature: str
     TimeStamp: str
 
+
 @dataclasses.dataclass
 class SeedData:
     genesis_block: Block.__dict__
@@ -39,12 +41,13 @@ class SeedData:
 def check_seed(seed):
     try:
         if type(seed) == str:
-            seed =  json.loads(seed)
+            seed = json.loads(seed)
         SeedData(**seed)
         return True
-    except Exception as e :
+    except Exception as e:
         print(e)
         return False
+
 
 def check_length(attribute, length):
     """Checks the attribute's length."""
@@ -77,7 +80,7 @@ class BaseModel:
         self.__commit()
         return self
 
-    @classmethod #修饰符
+    @classmethod  # 修饰符
     def from_dict(cls, model_dict):
         return cls(**model_dict).save()
 
@@ -85,33 +88,56 @@ class BaseModel:
 class UsersTable(UserMixin, db.Model, BaseModel):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    pubkey = db.Column("pubkey",db.String(64), unique=True)
+    pubkey = db.Column("pubkey", db.String(64), unique=True)
     comments = db.relationship("CommentsTable", backref="users", lazy="dynamic")
 
     def __init__(self, **kwargs):
         self.pubkey = "testit"
 
 
-
 class SeedsTable(db.Model, BaseModel):
     __tablename__ = "seeds"
-    
-    group_id = db.Column("group_id",db.String(128), primary_key=True)
+
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.String, unique=True, index=True)
+    group_name = db.Column(db.String)
+    owner_pubkey = db.Column(db.String)
+    consensus_type = db.Column(db.String)
+    encryption_type = db.Column(db.String)
+    cipher_key = db.Column(db.String)
+    app_key = db.Column(db.String)
+    signature = db.Column(db.String)
+    genesis_block = db.Column(db.String)
+    create_at = db.Column(db.Integer)
+    add_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     _seed = db.Column("seed", db.JSON)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     creator = db.Column(db.String(128), db.ForeignKey("users.pubkey"))
     comments = db.relationship("CommentsTable", backref="seeds", lazy="dynamic")
 
-    def __init__(self, seed=None, creator=None, created_at=None):
-        if type(seed) == str:
-            seed = json.loads(seed)
-        self.group_id = seed['group_id']
-        self.seed = seed or {}
-        self.creator = creator or "unpubkey"
-        self.created_at = created_at or datetime.utcnow()
+    def __init__(self, **seed):
+        if "owner_encryptpubkey" in seed:
+            del seed["owner_encryptpubkey"]
 
-    def __repr__(self):
-        return f"<Rum Seed: {self.seed}>"
+        super().__init__(**seed)
+        self.genesis_block = str(seed["genesis_block"])
+        self.create_at = int(seed["genesis_block"]["TimeStamp"])
+        self._seed = seed
+
+    def __repl__(self):
+        return str(self.to_dict())
+
+    def to_dict(self):
+        return {
+            "genesis_block": eval(self.genesis_block),
+            "group_id": self.group_id,
+            "group_name": self.group_name,
+            "owner_pubkey": self.owner_pubkey,
+            "consensus_type": self.consensus_type,
+            "encryption_type": self.encryption_type,
+            "cipher_key": self.cipher_key,
+            "app_key": self.app_key,
+            "signature": self.signature,
+        }
 
     @property
     def seed(self):
@@ -119,7 +145,7 @@ class SeedsTable(db.Model, BaseModel):
 
     @seed.setter
     def seed(self, seed):
-        #seed: 采用 dataclass 来检查字段来判断是否种子
+        # seed: 采用 dataclass 来检查字段来判断是否种子
         if not check_seed(seed):
             raise ValueError(f" not a valid seed \n{seed}\n")
         self._seed = seed
@@ -132,15 +158,6 @@ class SeedsTable(db.Model, BaseModel):
         kwargs = dict(group_id=self.group_id, _external=True)
         return url_for("api.get_seed_comments", **kwargs)
 
-    def to_dict(self):
-        return {
-            "seed": self.seed,
-            "creator": self.creator,
-            "created_at": self.created_at,
-            "comment_count": self.comment_count,
-            "comments":self.comments_url
-        }
-
     @property
     def comment_count(self):
         return self.comments.order_by(None).count()
@@ -148,6 +165,7 @@ class SeedsTable(db.Model, BaseModel):
 
 class CommentsTable(db.Model, BaseModel):
     """用户对种子网络的评价"""
+
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     commenttext = db.Column(db.String(512))

@@ -21,3 +21,13 @@ def fill_db():
     from utils.fake_generator import FakeGenerator
 
     FakeGenerator().start()  # side effect: deletes existing data
+
+
+@app.cli.command()
+def update_db():
+    from officepy import JsonFile
+    from config import Config
+    from utils.data_update import DataUpdater
+
+    seeds = JsonFile(Config.SeedsDataFile).read()
+    DataUpdater().start(seeds)
