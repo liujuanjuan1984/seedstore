@@ -62,6 +62,10 @@ tr td.seed-title {
     display: none;
 }
 
+.selector-for-some-widget {
+    box-sizing: content-box;
+}
+
 
 /* Larger than phone */
 
