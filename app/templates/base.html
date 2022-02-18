@@ -21,12 +21,12 @@
 
 <body>
     <div class="container">
-        <div class="navbar-spacer"></div>
+        <!--<div class="navbar-spacer"></div>-->
         <nav class="navbar">
             <div class="container">
                 <ul class="navbar-list">
                     <li class="navbar-item"><a class="navbar-link" href="{{ url_for('main.seeds_overview') }}">所有种子</a></li>
-                    <li class="navbar-item"></li><a class="navbar-link" href="{{ url_for('main.add_seed') }}">提交种子</a></li>
+                    <li class="navbar-item"><a class="navbar-link" href="{{ url_for('main.add_seed') }}">提交种子</a></li>
                     <li class="navbar-item">
                         <a class="navbar-link" href="#" data-popover="#moreNavPopover"> 待开发</a>
                         <div id="moreNavPopover" class="popover">

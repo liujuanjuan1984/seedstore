@@ -1,5 +1,5 @@
-.open-todos ul,
-.finished-todos ul {
+.open-comments ul,
+.finished-comments ul {
     list-style: none;
     text-align: left;
     word-wrap: break-word;
@@ -13,12 +13,6 @@ th.seed-title,
 tr td.seed-title {
     width: 50%;
     word-break: break-word;
-}
-
-.finished-todos li {
-    color: #aaa;
-    padding-left: 5pt;
-    text-decoration: line-through;
 }
 
 .container {

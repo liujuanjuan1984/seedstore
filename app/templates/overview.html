@@ -20,32 +20,29 @@
     <h4 class="title">种子概览</h4>
     <div class="row">
         <div class="u-full-width">
-            <h6 class="docs-header seed-overview">有关种子网络的更多有价值的详情，逐步添加中</h6>
+            <h6 class="docs-header seed-overview">点击种子网络，访问更多详情</h6>
             <table id="seed-overview-table" class="tablesorter">
                 <thead>
                     <tr>
-                        <th>group_name</th>
-                        <th>group_id</th>
-                        <th>app_key</th>
-                        <th>consensus_type</th>
-                        <th>encryption_type</th>
-                        <th>create_at</th>
-                        <th>seed</th>
+                        <th>种子网络</th>
+                        <th>种子ID</th>
+                        <th>类型</th>
+                        <th>共识</th>
+                        <th>加密</th>
+                        <th>创建于</th>
                         <th class="datetime">收录于</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for seed in seeds %}
                     <tr>
-                        <td><a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></td>
+                        <td>
+                            <a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></td>
                         <td>{{ seed.group_id }}</td>
                         <td>{{ seed.app_key }}</td>
                         <td>{{ seed.consensus_type }}</td>
                         <td>{{ seed.encryption_type }}</td>
                         <td>{{ seed.create_at }}</td>
-                        <td>
-                            <textarea>{{ seed.seed }}</textarea>
-                        </td>
                         <td data-time-in-seconds="{{ seed.add_at|in_seconds }}">{{ seed.add_at|humanize }}</td>
                     </tr>
                     {% endfor %}

@@ -10,11 +10,11 @@
             <form action="{{ url_for('main.add_seed') }}" method=post>
                 {{ form.hidden_tag() }}
                 <dl>
-                    <dd>{{ form.seed(class_="u-full-width", placeholder="在此处粘贴种子", maxlength=2000) }}
-                        <dt>{{ form.submit(class="button button-primary", value="提交") }}
-        </dl>
-      </form>
+                    <dd>{{ form.seed(class_="u-full-width", placeholder="在此处粘贴种子", maxlength=2000) }}</dd>
+                    <dd>{{ form.submit(class="button button-primary", value="提交") }}</dd>
+                </dl>
+            </form>
+        </div>
     </div>
-  </div>
 </section>
 {% endblock %}

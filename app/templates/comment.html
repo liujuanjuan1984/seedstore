@@ -2,53 +2,63 @@
 <script src="{{ url_for('static', filename='js/seed.js') }}"></script>
 {% endblock %} {% block body %}
 <section class="header">
-    <h2 class="title">{{seed.group_id}}</h2>
-    <div class="row">
-        <div class="three columns value-prop"></div>
-        <div>group_name <a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></div>
-        <div class="six columns"></div>
-        <div>group_id {{ seed.group_id }}</div>
-        <div>app_key {{ seed.app_key }}</div>
-        <div>consensus_type {{ seed.consensus_type }}</div>
-        <div>encryption_type {{ seed.encryption_type }}</div>
-        <div>create_at {{ seed.create_at }}</div>
-        <div> seed <textarea>{{ seed.seed }}</textarea> </div>
-        <div data-time-in-seconds="{{ seed.add_at|in_seconds }}">收录于 {{ seed.add_at|humanize }}</div>
-        <div class="six columns">
-            {% if form.errors %}
-            <div class="has-error"><strong>出错了</strong></div>
-            {% endif %}
-            <form method=post>
-                {{ form.hidden_tag() }}
-                <dl>
-                    <dd>{{ form.text(class_="u-full-width", placeholder="这个种子网络怎么样？", value="", maxlength=128) }}
-                        <dd>{{ form.stars(class_="u-full-width", placeholder="打分 0-5", value="", maxlength=8) }}
-                            <dt>{{ form.submit }}
+    <h3 class="title">{{seed.group_name}}</h3>
+</section>
+<section>
+    <div class="container">
+        <dl>
+            <dt>种子ID</dt>
+            <dd> {{ seed.group_id }}</dd>
+            <dt>类型</dt>
+            <dd> {{ seed.app_key }}</dd>
+            <dt>共识</dt>
+            <dd> {{ seed.consensus_type }}</dd>
+            <dt>加密</dt>
+            <dd> {{ seed.encryption_type }}</dd>
+            <dt>创建于</dt>
+            <dd> {{ seed.create_at }}</dd>
+            <dt>种子</dt>
+            <dd><textarea>{{ seed.seed }} </textarea></dd>
+            <dt>收录于</dt>
+            <dd data-time-in-seconds="{{ seed.add_at|in_seconds }}">{{ seed.add_at|humanize }}</dd>
         </dl>
-      </form>
+</section>
+<section>
+    <div class="container">
+        {% if form.errors %}
+        <div class="has-error"><strong>oppps...something is wrong.</strong></div>
+        {% endif %}
+        <form name="commentForm" ,method=post>
+            {{ form.hidden_tag() }}
+            <dl>
+                <dd>{{ form.text(class_="u-full-width", placeholder="这个种子网络怎么样？", value="", maxlength=128) }}</dd>
+                <dd>{{ form.stars(placeholder="打分 0-5", value="", maxlength=1) }}</dd>
+                <dd>{{ form.submit }}</dd>
+            </dl>
+        </form>
     </div>
-    <div class="row">
-      <div class="one-half column open-comments">
-        <h4 class="docs-header">评论</h4>
-        <ul>
-        <table>
-          <tr>
-            <th>序号</th>
-            <th>评分</th>
-            <th>评论</th>
-          </tr>
-          {% for comment in seed.comments %}
-          <tr>
-              <th>{{ comment.id }} </th>
-              <th>{{ comment.stars }} </th>
-              <th>{{ comment.commenttext }}</th>
-          </tr>
-          {% endfor %}
-        </table>
-        </ul>
-      </div>
-      </div>
+</section>
+<section>
+    <div class="container">
+        <div class="column open-comments">
+            <h4 class="docs-header">评论</h4>
+            <table>
+                <tr>
+                    <th>序号</th>
+                    <th>评分</th>
+                    <th>评论</th>
+                </tr>
+                {% for comment in seed.comments %}
+                <tr>
+                    <th>{{ comment.id }} </th>
+                    <th>{{ comment.stars }} </th>
+                    <th>{{ comment.commenttext }}</th>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-  </div>
+    </div>
+    </div>
 </section>
 {% endblock %}
