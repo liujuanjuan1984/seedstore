@@ -64,13 +64,17 @@ def seed_info(group_id):
     _seed = SeedsTable.query.filter_by(group_id=group_id).first_or_404()
     form = CommentForm()
     if form.validate_on_submit():
-        CommentsTable(
-            commenttext=form.text.data,
-            stars=form.stars.data,
-            group_id=_seed.group_id,
-            creator=_get_user(),
-        ).save()
-        return redirect(url_for("main.seed_info", group_id=group_id))
+        try:
+            CommentsTable(
+                commenttext=form.text.data,
+                stars=form.stars.data,
+                group_id=_seed.group_id,
+                creator=_get_user(),
+            ).save()
+            flash("A new comment is successfully saved.")
+            return redirect(url_for("main.seed_info", group_id=group_id))
+        except:
+            flash("Something went wrong, report to the admin. Thank you.")
     return render_template("comment.html", seed=_seed, form=form)
 
 
@@ -88,13 +92,14 @@ def check_seed(formdata):
 def add_seed():
     # 从请求中拿到form信息
     form = SeedForm()
-    if form.validate():
+    if form.validate_on_submit():
         rlt, seed = check_seed(form.seed.data)
         if seed:
             seed = SeedsTable(creator=_get_user(), **seed).save()
-            flash("Thank you for share a new seed!")
+            flash("A new seed is successfully saved.")
             return redirect(url_for("main.seed_info", group_id=seed.group_id))
         else:
-            flash("Ooopps. We've got this seed. or check your seed.")
+            flash("Ooopps. We've got this seed.")
             return redirect(url_for("main.add_seed"))
+    flash("share a seed")
     return render_template("addseed.html", form=form)

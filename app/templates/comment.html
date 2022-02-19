@@ -1,64 +1,54 @@
-{% extends "base.html" %} {% block js %}
+{% extends"base.html" %}{% block js %}
 <script src="{{ url_for('static', filename='js/seed.js') }}"></script>
 {% endblock %} {% block body %}
+
 <section class="header">
-    <h3 class="title">{{seed.group_name}}</h3>
+    <h3 class="title">{{seed.group_name}} </h3>
+    <span>{{seed.group_id}} </span>
+    <span>{{seed.create_at}}</span>
 </section>
-<section>
-    <div class="container">
+<section class="container">
+    <div class="comments">
+        <ul>
+            <li> Template {{seed.app_key}} </li>
+            <li> Consensus {{seed.consensus_type}} </li>
+            <li> Encryption {{seed.encryption_type}} </li>
+        </ul>
+    </div>
+</section>
+<section class=" container">
+    <h3 class="docs-header"> Your Opnion </h3>
+    {% if form.errors %}
+    <div class="has-error"> Ooopps.Something went wrong.</div>
+    {% endif %}
+
+    <form name="commentForm" , method=post>{{form.hidden_tag()}}
+
         <dl>
-            <dt>种子ID</dt>
-            <dd> {{ seed.group_id }}</dd>
-            <dt>类型</dt>
-            <dd> {{ seed.app_key }}</dd>
-            <dt>共识</dt>
-            <dd> {{ seed.consensus_type }}</dd>
-            <dt>加密</dt>
-            <dd> {{ seed.encryption_type }}</dd>
-            <dt>创建于</dt>
-            <dd> {{ seed.create_at }}</dd>
-            <dt>种子</dt>
-            <dd><textarea>{{ seed.seed }} </textarea></dd>
-            <dt>收录于</dt>
-            <dd data-time-in-seconds="{{ seed.add_at|in_seconds }}">{{ seed.add_at|humanize }}</dd>
+            <li>{{form.text(class_="u-full-width", placeholder="How about this seednet?", value="", maxlength=128)}}
+            </li>
+            <li>{{form.stars(placeholder="number 1-5", value="", maxlength=1)}}
+            </li>
+            <li>{{form.submit(class="button button-primary", value="Commit")}}
+            </li>
         </dl>
+
+    </form>
 </section>
-<section>
-    <div class="container">
-        {% if form.errors %}
-        <div class="has-error"><strong>oppps...something is wrong.</strong></div>
-        {% endif %}
-        <form name="commentForm" ,method=post>
-            {{ form.hidden_tag() }}
-            <dl>
-                <dd>{{ form.text(class_="u-full-width", placeholder="这个种子网络怎么样？", value="", maxlength=128) }}</dd>
-                <dd>{{ form.stars(placeholder="打分 0-5", value="", maxlength=1) }}</dd>
-                <dd>{{ form.submit }}</dd>
-            </dl>
-        </form>
-    </div>
-</section>
-<section>
-    <div class="container">
-        <div class="column open-comments">
-            <h4 class="docs-header">评论</h4>
-            <table>
-                <tr>
-                    <th>序号</th>
-                    <th>评分</th>
-                    <th>评论</th>
-                </tr>
-                {% for comment in seed.comments %}
-                <tr>
-                    <th>{{ comment.id }} </th>
-                    <th>{{ comment.stars }} </th>
-                    <th>{{ comment.commenttext }}</th>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-    </div>
+<section class="container">
+    <div class="column comments">
+        <h3 class="docs-header"> Comments </h3>
+        <table>
+            {% for comment in seed.comments %}
+            <tr>
+                <th class="table-content">{{comment.id}} </th>
+                <th class="table-content">{{comment.stars}} </th>
+                <th class="table-content">{{comment.commenttext}} </th>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </section>
+
+
 {% endblock %}

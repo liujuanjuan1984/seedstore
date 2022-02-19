@@ -1,20 +1,23 @@
 {% extends "base.html" %} {% block body %}
 <section class="header">
-    <h2 class="title">分享种子</h2>
-    <div class="row">
-        <div class="three columns value-prop"></div>
-        <div class="six columns">
+    <h2 class="title">Share a seed.</h2>
+</section>
+<section>
+    <div class="container">
+        <div>
             {% if form.errors %}
-            <div class="has-error"><strong>请从 rum 中拷贝种子文本粘贴在下方</strong></div>
+            <div class="has-error">Copy the seed from quorum and paste it here:</div>
             {% endif %}
-            <form action="{{ url_for('main.add_seed') }}" method=post>
-                {{ form.hidden_tag() }}
-                <dl>
-                    <dd>{{ form.seed(class_="u-full-width", placeholder="在此处粘贴种子", maxlength=2000) }}</dd>
-                    <dd>{{ form.submit(class="button button-primary", value="提交") }}</dd>
-                </dl>
-            </form>
         </div>
+
+        <form action="{{ url_for('main.add_seed') }}" method=post>
+            {{ form.hidden_tag() }}
+            <dl>
+                <dd>{{ form.seed(class_="u-full-width", placeholder="one seed one time.", maxlength=2000) }}</dd>
+                <dd>{{ form.submit(class="button button-primary", value="Commit") }}</dd>
+            </dl>
+        </form>
+
     </div>
 </section>
 {% endblock %}

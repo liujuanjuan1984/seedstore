@@ -147,6 +147,7 @@ class SeedsTable(db.Model, BaseModel):
     def seed(self, seed):
         # seed: 采用 dataclass 来检查字段来判断是否种子
         if not check_seed(seed):
+            flash("not a seed.")
             raise ValueError(f" not a valid seed \n{seed}\n")
         self._seed = seed
 
