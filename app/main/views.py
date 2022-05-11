@@ -1,6 +1,4 @@
 from flask import redirect, render_template, request, url_for
-from flask_login import current_user, login_required
-
 from app.main import main
 from app.main.forms import CommentForm, SeedForm
 from app.models import CommentsTable, SeedsTable

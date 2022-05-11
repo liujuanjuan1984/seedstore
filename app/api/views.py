@@ -1,7 +1,5 @@
 from flask import abort, request, url_for
-
 from app.api import api
-from app.decorators import admin_required
 from app.models import CommentsTable, SeedsTable, UsersTable
 
 
