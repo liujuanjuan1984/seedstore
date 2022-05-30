@@ -11,10 +11,25 @@ set FLASK_APP=seedstore.py
 flask run
 ```
 
+Format:
+
+```bash
+isort .
+black -l 80 -t py37 -t py38 -t py39 -t py310 .
+black -l 120 -t py37 -t py38 -t py39 -t py310 .
+
+```
+
 To add some 'test' data you can run:
 
 ```sh
 flask fill-db
+```
+
+To add more seeds data from jsonfile:
+
+```sh
+flask update-db
 ```
 
 Now you can browse the web:

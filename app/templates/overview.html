@@ -25,7 +25,6 @@
                 <thead>
                     <tr>
                         <th class="table-title">Name</th>
-                        <th class="table-title">ID</th>
                         <th class="table-title">Info</th>
                         <th class="table-title">Seed</th>
                         <th class="table-title">Copy</th>
@@ -37,8 +36,8 @@
                     {% for seed in seeds %}
                     <tr>
                         <td class="table-content">
-                            <a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a></td>
-                        <td class="table-content">{{ seed.group_id }}</td>
+                            <a href="{{ url_for('main.seed_info', group_id=seed.group_id) }}">{{ seed.group_name }}</a><br/>{{ seed.group_id }}
+                        </td>
                         <td class="table-content">{{ seed.app_key }}
                             <br/>{{ seed.consensus_type }}
                             <br/>{{ seed.encryption_type }}</td>
@@ -46,7 +45,7 @@
                             <textarea class="seedtext" id="copyseed" name="text" readonly="readonly">{{seed.seed}}</textarea>
                         </td>
                         <td><button class="button button-primary" onclick="copy()"> Copy Seed</button></td>
-                        <td class="table-content">{{ seed.create_at }}</td>
+                        <td class="table-content" data-time-in-seconds="{{ seed.created_at|in_seconds }}" >{{ seed.created_at |humanize}}</td>
                         <td class="table-content" data-time-in-seconds="{{ seed.add_at|in_seconds }}">{{ seed.add_at|humanize }}</td>
                     </tr>
                     {% endfor %}

@@ -25,7 +25,8 @@ def fill_db():
 
 @app.cli.command()
 def update_db():
-    from officepy import JsonFile
+    from officy import JsonFile
+
     from config import Config
     from utils.data_update import DataUpdater
 

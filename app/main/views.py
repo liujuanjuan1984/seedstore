@@ -1,34 +1,12 @@
-from flask import redirect, render_template, request, url_for
+import dataclasses
+import random
+
+from flask import flash, redirect, render_template, request, url_for
+from rumpy.types.data import is_seed
+
 from app.main import main
 from app.main.forms import CommentForm, SeedForm
 from app.models import CommentsTable, SeedsTable
-import random
-import dataclasses
-from flask import flash
-
-
-@dataclasses.dataclass
-class Block:
-    BlockId: str
-    GroupId: str
-    ProducerPubKey: str
-    Hash: str
-    Signature: str
-    TimeStamp: str
-
-
-@dataclasses.dataclass
-class Seed:
-    genesis_block: Block.__dict__
-    group_id: str
-    group_name: str
-    consensus_type: str
-    encryption_type: str
-    cipher_key: str
-    app_key: str
-    signature: str
-    owner_pubkey: str
-    owner_encryptpubkey: str = None  # 新版本似乎弃用该字段了
 
 
 # 主页
@@ -53,7 +31,6 @@ def _get_user():
 def seeds_overview_user(pubkey="444"):
     seeds = SeedsTable.query.filter_by(pubkey=pubkey)
     return redirect(url_for("main.seeds_overview_user", pubkey=pubkey))
-    # return render_template("overview.html",seeds=seeds)
 
 
 # 查询一条seed的独立页面，并提价评论
@@ -79,10 +56,11 @@ def seed_info(group_id):
 def check_seed(formdata):
     try:
         seed = json.loads(formdata)
-        Seed(**seed)
-        return True, seed
+        if is_seed(seed):
+            return seed
+        return None
     except:
-        return False, None
+        return None
 
 
 # 添加一条seed
@@ -91,8 +69,7 @@ def add_seed():
     # 从请求中拿到form信息
     form = SeedForm()
     if form.validate_on_submit():
-        rlt, seed = check_seed(form.seed.data)
-        if seed:
+        if seed := check_seed(form.seed.data):
             seed = SeedsTable(creator=_get_user(), **seed).save()
             flash("A new seed is successfully saved.")
             return redirect(url_for("main.seed_info", group_id=seed.group_id))

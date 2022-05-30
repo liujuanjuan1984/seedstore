@@ -1,11 +1,12 @@
-import re
 import dataclasses
 import json
+import re
 import time
 from datetime import datetime
 
 from flask import url_for
-from flask_login import UserMixin
+from rumpy.types.data import is_seed
+from rumpy.utils import timestamp_to_datetime
 from sqlalchemy.orm import synonym
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -15,38 +16,14 @@ EMAIL_REGEX = re.compile(r"^\S+@\S+\.\S+$")
 USERNAME_REGEX = re.compile(r"^\S+$")
 
 
-@dataclasses.dataclass
-class Block:
-    BlockId: str
-    GroupId: str
-    ProducerPubKey: str
-    Hash: str
-    Signature: str
-    TimeStamp: str
-
-
-@dataclasses.dataclass
-class SeedData:
-    genesis_block: Block.__dict__
-    group_id: str
-    group_name: str
-    consensus_type: str
-    encryption_type: str
-    cipher_key: str
-    app_key: str
-    signature: str
-    owner_pubkey: str
-
-
-def check_seed(seed):
-    try:
-        if type(seed) == str:
-            seed = json.loads(seed)
-        SeedData(**seed)
-        return True
-    except Exception as e:
-        print(e)
-        return False
+class DateEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        elif isinstance(obj, date):
+            return obj.strftime("%Y-%m-%d")
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 def check_length(attribute, length):
@@ -85,7 +62,7 @@ class BaseModel:
         return cls(**model_dict).save()
 
 
-class UsersTable(UserMixin, db.Model, BaseModel):
+class UsersTable(db.Model, BaseModel):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     pubkey = db.Column("pubkey", db.String(64), unique=True)
@@ -108,9 +85,9 @@ class SeedsTable(db.Model, BaseModel):
     app_key = db.Column(db.String)
     signature = db.Column(db.String)
     genesis_block = db.Column(db.String)
-    create_at = db.Column(db.Integer)
-    add_at = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    _seed = db.Column("seed", db.JSON)
+    created_at = db.Column(db.DateTime)
+    add_at = db.Column(db.DateTime, index=True, default=datetime.now)
+    _seed = db.Column("seed", db.String)
     creator = db.Column(db.String(128), db.ForeignKey("users.pubkey"))
     comments = db.relationship("CommentsTable", backref="seeds", lazy="dynamic")
 
@@ -119,12 +96,13 @@ class SeedsTable(db.Model, BaseModel):
             del seed["owner_encryptpubkey"]
 
         super().__init__(**seed)
-        self.genesis_block = str(seed["genesis_block"])
-        self.create_at = int(seed["genesis_block"]["TimeStamp"])
-        self._seed = seed
+        self.genesis_block = json.dumps(seed["genesis_block"], cls=DateEncoder)
+        dt = timestamp_to_datetime(int(seed["genesis_block"]["TimeStamp"]))
+        self.created_at = datetime.combine(dt.date(), dt.time())
+        self._seed = json.dumps(seed, cls=DateEncoder)
 
     def __repl__(self):
-        return str(self.to_dict())
+        return json.dumps(self.to_dict(), cls=DateEncoder)
 
     def to_dict(self):
         return {
@@ -145,11 +123,10 @@ class SeedsTable(db.Model, BaseModel):
 
     @seed.setter
     def seed(self, seed):
-        # seed: 采用 dataclass 来检查字段来判断是否种子
-        if not check_seed(seed):
+        if not is_seed(seed):
             flash("not a seed.")
             raise ValueError(f" not a valid seed \n{seed}\n")
-        self._seed = seed
+        self._seed = json.dumps(seed, cls=DateEncoder)
 
     seed = synonym("_seed", descriptor=seed)
 
@@ -183,9 +160,7 @@ class CommentsTable(db.Model, BaseModel):
         self.created_at = created_at or datetime.utcnow()
 
     def __repr__(self):
-        return "<{} 评价: {} by {}>".format(
-            self.group_id, self.commenttext, self.creator or "None"
-        )
+        return "<{} 评价: {} by {}>".format(self.group_id, self.commenttext, self.creator or "None")
 
     def to_dict(self):
         return {

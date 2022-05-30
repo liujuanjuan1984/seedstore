@@ -26,7 +26,7 @@ class FakeGenerator:
         # for the creator relation we need users
         for _ in range(count):
             SeedsTable(
-                seed={
+                **{
                     "genesis_block": {
                         "BlockId": "eba2a180-473e-46fc-80e2-8ef1fab85f10",
                         "GroupId": "e7ca1441-449a-497a-a458-dcc6631c1bd9",

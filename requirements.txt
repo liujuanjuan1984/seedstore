@@ -5,3 +5,4 @@ Flask-Migrate==3.0.0
 Flask-WTF==0.15.0
 flask-bootstrap==3.3.7
 email_validator==1.1.2
+ForgeryPy3

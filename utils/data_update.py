@@ -1,4 +1,5 @@
-from officepy import JsonFile
+from officy import JsonFile
+
 from app import db
 from app.models import SeedsTable
 
