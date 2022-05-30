@@ -39,3 +39,17 @@ Now you can browse the web:
 - <http://localhost:5000/seeds>
 
 Click around, there is not too much.
+
+## Overview:
+
+all the seeds overview:
+
+![](./images/seeds_overview.png)
+
+share a seed:
+
+![](./images/add_seed.png)
+
+view seednet info and leave comments:
+
+![](./images/seednet.png)
