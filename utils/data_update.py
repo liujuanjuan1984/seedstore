@@ -4,9 +4,9 @@ from app import db
 from app.models import SeedsTable
 
 
-class DataUpdater:
+class SeedsInit:
     def __init__(self):
-        # db.drop_all()
+        db.drop_all()
         db.create_all()
 
     def update_seed(self, seeds):

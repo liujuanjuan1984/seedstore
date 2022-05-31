@@ -1,6 +1,6 @@
 import os
 
-BASEDIR = os.path.abspath(os.path.dirname(__file__))
+BASEDIR = os.path.dirname(__file__)
 
 
 def create_sqlite_uri(db_name):
@@ -12,7 +12,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_RECORD_QUERIES = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SeedsDataFile = os.path.join(BASEDIR, "data", "seedsdata.json")
+    SeedsDataFile = os.path.join(os.path.dirname(BASEDIR), "seeds", "data", "seeds.json")
 
     @staticmethod
     def init_app(app):

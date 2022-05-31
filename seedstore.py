@@ -28,7 +28,7 @@ def update_db():
     from officy import JsonFile
 
     from config import Config
-    from utils.data_update import DataUpdater
+    from utils.data_update import SeedsInit
 
     seeds = JsonFile(Config.SeedsDataFile).read()
-    DataUpdater().start(seeds)
+    SeedsInit().start(seeds)
